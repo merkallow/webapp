@@ -123,7 +123,7 @@ const Login : NextPage = () => {
 	};
 
 	return (
-		<div>
+		<div className='h-100 d-flex justify-content-center align-items-center'  style={{border:'1px solid red', height:'100vh'}}>
 			<p>
 				Please select your login method.
 				<br />
