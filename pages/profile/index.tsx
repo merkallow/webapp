@@ -53,7 +53,7 @@ const Profile = (): JSX.Element => {
         const authGen = ls && JSON.parse(ls);
         setAuth(authGen)
      
-		const { accessToken } ={} = auth;
+		const accessToken = auth?.accessToken ?? null;
         if(!accessToken) return;
 		const {
 			payload: { id },
