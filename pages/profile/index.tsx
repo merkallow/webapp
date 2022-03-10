@@ -41,6 +41,7 @@ const Profile = (): JSX.Element => {
 		username: '',
 	});
 
+    
     const [auth, setAuth] = useState<any>({
         accessToken:null
     })
@@ -52,7 +53,7 @@ const Profile = (): JSX.Element => {
         const authGen = ls && JSON.parse(ls);
         setAuth(authGen)
      
-		const { accessToken } = auth;
+		const { accessToken } ={} = auth;
         if(!accessToken) return;
 		const {
 			payload: { id },
@@ -107,7 +108,7 @@ const Profile = (): JSX.Element => {
     const [publicAddress, setPublicAddress] = useState('')
     
     useEffect(()=>{
-        const { accessToken } = auth
+        const { accessToken  ={}} = auth
         if(!accessToken){
             return ;
            
