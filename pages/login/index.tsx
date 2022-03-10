@@ -105,7 +105,7 @@ const Login : NextPage = () => {
 			.then((response) => response.json())
 			// If yes, retrieve it. If no, create it.
 			.then((users) => {
-                console.log('users', users)  
+             
               return  users.length ? users[0] : handleSignup(publicAddress)
             }
            
