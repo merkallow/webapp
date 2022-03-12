@@ -98,12 +98,8 @@ export const loginUserAsync = createAsyncThunk(
 				window.alert(err);
 			//	setLoading(false);
 			});
-
- 
-	//	setLoading(true);
-
 const accessToken = response?.accessToken ?? null
-  console.log(accessToken, 'access')
+  
 if(!accessToken) {
   //
 }
@@ -119,11 +115,7 @@ const  userDetails = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/$
 })
   .then((response) => response.json())
   .catch(window.alert);
-
-  console.log('getUsers', userDetails)
-
-    
-      return userDetails;
+    return {accessToken, details:userDetails};
     } catch (error) {
       
 
@@ -140,11 +132,13 @@ interface UsersState {
       publicNumber:string,
       username:string | null
     }
+    accessToken:string | null
     loading: 'idle' | 'pending' | 'succeeded' | 'failed'
   }
   
   const initialState = {
     user:{},
+    accessToken:null,
     loading: 'idle',
   } as UsersState
 
@@ -159,13 +153,17 @@ export const user = createSlice({
    
     extraReducers: (builder) => {
       builder
-
         .addCase(loginUserAsync.pending, (state) => {
           state.loading = 'pending';   
         })
         .addCase(loginUserAsync.fulfilled, (state, {payload})=>{
-          state.user = payload
+          state.user = payload?.details;
+          state.accessToken=payload?.accessToken
         })
+        .addCase(loginUserAsync.rejected, (state, {payload})=>{
+        //  state.user = {}
+        })
+        
     
     },
    });
