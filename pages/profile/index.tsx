@@ -1,12 +1,11 @@
 import jwtDecode from 'jwt-decode';
 import React, { useState, useEffect, useMemo } from 'react';
-import Blockies from 'react-blockies';
 import { useRouter } from 'next/router'
-
+import { LS_KEY} from '../../constants'
 import { Auth } from '../../types';
+import useLogout from '../../hooks/logout'
 
-const LS_KEY = 'login-with-metamask:auth';
- 
+
 interface Props {
 	// auth: Auth;
 	onLoggedOut: () => void;
@@ -30,11 +29,7 @@ interface JwtDecoded {
 
 
 const Profile = (): JSX.Element => {
-    const router = useRouter()
-    const handleLoggedOut = () => {
-        localStorage.removeItem(LS_KEY);
-        router.push('./login')
-    };
+	const handleLoggedOut = useLogout()
 	const [state, setState] = useState<State>({
 		loading: false,
 		user: undefined,
@@ -69,6 +64,7 @@ const Profile = (): JSX.Element => {
 			.catch(window.alert);
 	}, [authMem]);
 
+	
 	const handleChange = ({
 		target: { value },
 	}: React.ChangeEvent<HTMLInputElement>) => {
@@ -104,14 +100,13 @@ const Profile = (): JSX.Element => {
 			});
 	};
 
-
     const [publicAddress, setPublicAddress] = useState('')
     
     useEffect(()=>{
-        const { accessToken  ={}} = auth
+		const accessToken = auth?.accessToken ?? null;
+        
         if(!accessToken){
-            return ;
-           
+            return ;      
         }
         const {
             payload: { publicAddress:pubAddress },
@@ -128,9 +123,7 @@ const Profile = (): JSX.Element => {
 
 	return (
 		<div className="Profile">
-			<p>
-				Logged in as <Blockies seed={publicAddress} />
-			</p>
+			
 			<div>
 				My username is {username ? <pre>{username}</pre> : 'not set.'}{' '}
 				My publicAddress is <pre>{publicAddress}</pre>
@@ -142,9 +135,7 @@ const Profile = (): JSX.Element => {
 					Submit
 				</button>
 			</div>
-			<p>
-				<button onClick={handleLoggedOut}>Logout</button>
-			</p>
+	
 		</div>
 	);
 };
