@@ -1,12 +1,8 @@
-import Head from 'next/head'
-import Image from 'next/image'
-import styles from '../styles/Home.module.css'
 import { useRouter } from 'next/router'
+import { TailSpin } from 'react-loader-spinner'
 
 import React, { useEffect, useState } from 'react';
 
-// import { Login } from '../Login';
-// import { Profile } from '../Profile/Profile';
 import { Auth } from '../types';
 
 const LS_KEY = 'login-with-metamask:auth';
@@ -19,38 +15,39 @@ const Home = () => {
   const router = useRouter();
   const [state, setState] = useState<State>({});
 
-	useEffect(() => {
-		// Access token is stored in localstorage
-		const ls = window.localStorage.getItem(LS_KEY);
-		const auth = ls && JSON.parse(ls);
-		setState({ auth });
-	}, []);
 
-	const handleLoggedIn = (auth: Auth) => {
-		localStorage.setItem(LS_KEY, JSON.stringify(auth));
-		setState({ auth });
-	};
+	// const handleLoggedIn = (auth: Auth) => {
+	// 	localStorage.setItem(LS_KEY, JSON.stringify(auth));
+	// 	setState({ auth });
+	// };
 
-	const handleLoggedOut = () => {
-		localStorage.removeItem(LS_KEY);
-		setState({ auth: undefined });
-	};
+	// const handleLoggedOut = () => {
+	// 	localStorage.removeItem(LS_KEY);
+	// 	setState({ auth: undefined });
+	// };
 
 	const { auth } = state;
 
-  if (typeof window !== 'undefined' && !auth) {
-  router.push('/login');
-}
 
 useEffect(()=> {
+// Access token is stored in localstorage
+const ls = window.localStorage.getItem(LS_KEY);
+const auth = ls && JSON.parse(ls);
+setState({ auth });
 
   if (typeof window !== 'undefined' && !auth) {
     router.push('/login');
+  } else {
+	router.push('/profile');
   }
-  router.push('/profile');
+  
 },[auth])
 
-return "Loading, pls wait..."
+return (<>
+<div className='h-100 vh-100 d-flex justify-content-center align-items-center'>
+<TailSpin ariaLabel="loading-indicator" />
+</div>
+</>)
 
 }
 
