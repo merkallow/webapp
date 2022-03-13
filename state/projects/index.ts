@@ -17,22 +17,19 @@ export const createProjectAsync = createAsyncThunk(
   async (data:CreatePro, { dispatch }) => { 
       const {name, accessToken} = data 
       
-      const  createProjects = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/projects`,
-      {name}, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        }
-      }
-      )
-
-const dat = createProjects?.data
-     return dat
-
-    
-    
-
 
     try {
+        const  addAddress = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/projects`,
+        {name}, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          }
+        }
+        )
+        console.log(addAddress, 'add address')
+  
+  //const dat = createProjects?.data
+
     return {};
     } catch (error) {     
     }
@@ -84,6 +81,31 @@ export const getProjectAsync = createAsyncThunk(
           if(getProjectDetails.length ===0) return []
           console.log(getProjectDetails, 'projecc')
       return getProjectDetails
+      } catch (error) {     
+      }
+    }
+  );
+
+  type AddAddressToProject = {
+      addresses:String[],
+      accessToken:string
+  }
+  export const addListToProjectAsync = createAsyncThunk(
+    "project/add-project-address-list",
+    async (data:AddAddressToProject) => {  
+        const { accessToken, addresses } = data
+       
+      try { 
+      const  createProjects = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/addresses`,
+        {addresses}, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          }
+        }
+        )
+        
+        console.log(createProjects, 'add list')
+    //  return createProjects
       } catch (error) {     
       }
     }
@@ -155,6 +177,16 @@ export const project = createSlice({
      })
         .addCase(getProjectDetailsAsync.rejected, (state, {payload})=>{
         state.loading = 'idle';  
+     })
+        .addCase(addListToProjectAsync.pending, (state, {payload})=>{
+            state.crud = true;  
+        })
+        .addCase(addListToProjectAsync.fulfilled, (state, {payload})=>{
+         //   state.projectDetails =payload
+         state.crud = false;  
+     })
+        .addCase(addListToProjectAsync.rejected, (state, {payload})=>{
+            state.crud = false;    
      })
        
         
