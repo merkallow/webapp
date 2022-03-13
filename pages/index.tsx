@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router'
-import { TailSpin } from 'react-loader-spinner'
+import MainLoader from '../components/MainLoader';
 
 import React, { useEffect, useState } from 'react';
 
@@ -40,14 +40,9 @@ setState({ auth });
   } else {
 	router.push('/profile');
   }
-  
 },[auth])
 
-return (<>
-<div className='h-100 vh-100 d-flex justify-content-center align-items-center'>
-<TailSpin ariaLabel="loading-indicator" />
-</div>
-</>)
+return  <MainLoader  />
 
 }
 

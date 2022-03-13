@@ -8,6 +8,7 @@ import { AppState } from '../../state';
 
 import { Auth } from '../../types';
 import Button from '../../components/Button';
+import MainLoader from '../../components/MainLoader';
 
 const LS_KEY = 'login-with-metamask:auth';
 
@@ -19,11 +20,14 @@ let web3: Web3 | undefined = undefined; // Will hold the web3 instance
 
 const Login : NextPage = () => {
 	const dispatch = useDispatch()
-	const { user:{publicAddress} } = useSelector(state=> state?.user)
+	const { loggedIn,  loading, crud } = useSelector<AppState, AppState['user']>(state=> state?.user)
     const router = useRouter()
-	const [loading, setLoading] = useState(false); // Loading button state
 
-	
+//	const [loading, setLoading] = useState(false); // Loading button state
+
+	useEffect(()=>{
+		if(loggedIn) router.push('/profile')
+	},[loggedIn])
 	const handleClick = async () => {
 		// Check if MetaMask is installed
 		if (!(window).ethereum) {
@@ -58,6 +62,8 @@ const Login : NextPage = () => {
 	
 	};
 
+	const ongoingCrud = crud ==='pending'
+	if(loading ==='pending') return <MainLoader />
 	return (
 		<div className='d-flex justify-content-center align-items-center text-center' style={{
 			height:'80vh'
@@ -68,8 +74,8 @@ const Login : NextPage = () => {
 				<br />
 				only MetaMask is needed to login
 			</p>
-			<Button onClick={handleClick} disabled={loading} style={{opacity:`${loading ? '0.5':'1'}`}}>
-			{loading ? 'Loading...' : 'Login with MetaMask'}
+			<Button onClick={handleClick} disabled={ongoingCrud} style={{opacity:`${ongoingCrud ? '0.5':'1'}`}}>
+			{ongoingCrud ? 'Loading...' : 'Login with MetaMask'}
 			</Button>
 			</div>
 		
