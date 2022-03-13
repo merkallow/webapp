@@ -115,6 +115,8 @@ const  userDetails = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/users/$
 })
   .then((response) => response.json())
   .catch(window.alert);
+
+
     return {accessToken, details:userDetails};
     } catch (error) {
       
@@ -131,15 +133,19 @@ interface UsersState {
       nonce:number,
       publicNumber:string,
       username:string | null
-    }
-    accessToken:string | null
-    loading: 'idle' | 'pending' | 'succeeded' | 'failed'
+    },
+    accessToken:string | null,
+    loading: 'idle' | 'pending' | 'succeeded' | 'failed',
+    loggedIn:Boolean | null,
+    crud:Boolean | null
   }
   
   const initialState = {
     user:{},
     accessToken:null,
     loading: 'idle',
+    loggedIn:null,
+    crud:null,
   } as UsersState
 
 export const user = createSlice({
@@ -147,7 +153,10 @@ export const user = createSlice({
     initialState,
     reducers:{
     logoutOut:(state)=>{
-
+      state.loggedIn=null
+      state.accessToken=null
+      state.loading='idle'
+      state.crud = false
     }
     },
    
@@ -157,8 +166,10 @@ export const user = createSlice({
           state.loading = 'pending';   
         })
         .addCase(loginUserAsync.fulfilled, (state, {payload})=>{
+          state.loading= 'idle'
           state.user = payload?.details;
           state.accessToken=payload?.accessToken
+          state.loggedIn=true
         })
         .addCase(loginUserAsync.rejected, (state, {payload})=>{
         //  state.user = {}
@@ -168,5 +179,8 @@ export const user = createSlice({
     },
    });
 
+   export const {logoutOut} = user.actions
+
+  
   
 export default user.reducer;

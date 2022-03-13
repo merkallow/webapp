@@ -95,6 +95,7 @@ const handleSubmit = (e:FormEvent)=>{
 						return <>
 							<p key={item?.id}>
 								{item?.name}
+								<Button  className='mx-2' variant='success'>Generate </Button>
 							</p>
 						</>
 					})
