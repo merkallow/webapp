@@ -31,9 +31,9 @@ const Header: FC<Props> = ({...rest}) => {
         <Blockies seed={''}  className='rounded'/>
         <Button className='mx-2' onClick={handleLoggedOut} style={{opacity:`${crud==='pending' ? '0.5':'1'}`}}>
         {
-          crud==='pending' ? 'Logging out'
+         loggedIn ? 'Logout'
           :
-          'Logout'
+          'Login'
         }
         </Button>
 
