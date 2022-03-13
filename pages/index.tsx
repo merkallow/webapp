@@ -40,7 +40,7 @@ setState({ auth });
   } else {
 	router.push('/profile');
   }
-},[auth])
+},[auth, router])
 
 return  <MainLoader  />
 

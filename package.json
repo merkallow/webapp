@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@popperjs/core": "^2.10.2",
     "@reduxjs/toolkit": "^1.8.0",
     "@types/react-redux": "^7.1.23",
     "@types/styled-components": "^5.1.24",
