@@ -2,7 +2,6 @@ import { ReactNode, FC, useEffect } from 'react'
 import styled from "styled-components";
 import Blockies from 'react-blockies'
 import Button from '../Button';
-import useLogout from '../../hooks/logout';
 import {useSelector, useDispatch}  from 'react-redux'
 import { logoutOut } from '../../state/user'
 import { AppState } from '../../state';

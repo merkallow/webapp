@@ -32,7 +32,9 @@ const Profile = (): JSX.Element => {
 		if(!token) return;
 		dispatch(getProjectAsync(token))
 	},[token])
+
 	if(loading ==='pending') return <p>Loading</p>
+	
 	if(data.length === 0) return <div>
 		 <Modal show={openCreateModal} onHide={handleClose}>
         <Modal.Header closeButton>
