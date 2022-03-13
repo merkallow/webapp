@@ -1,9 +1,10 @@
+import Link from 'next/link'
 import { Modal, Button } from 'react-bootstrap'
 import React, { ChangeEvent, FormEvent, useEffect, useState} from 'react';
-import useLogout from '../../hooks/logout'
 import {useSelector, useDispatch} from 'react-redux'
 import { AppState } from '../../state';
 import { getProjectAsync, closeCreateModal, openCreateModal as openModalAction, createProjectAsync } from '../../state/projects';
+
 
 
 interface Props {
@@ -97,6 +98,12 @@ const handleSubmit = (e:FormEvent)=>{
 						return <>
 							<p key={item?.id}>
 								{item?.name}
+								<Link href={`/projects/${item.id}`}>
+          <a>
+
+								<Button  className='mx-2' variant='success'>View</Button>
+		  </a>
+        </Link>
 								<Button  className='mx-2' variant='success'>Generate </Button>
 							</p>
 						</>

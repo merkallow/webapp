@@ -11,6 +11,7 @@ type CreatePro ={
     name:string,
     accessToken:string
 }
+
 export const createProjectAsync = createAsyncThunk(
   "project/create",
   async (data:CreatePro, { dispatch }) => { 
@@ -40,6 +41,10 @@ const dat = createProjects?.data
 
 
 
+type GetProjeDetails ={
+    accessToken:string,
+    id:number
+}
 export const getProjectAsync = createAsyncThunk(
     "project/get",
     async (accessToken:string) => {  
@@ -61,7 +66,28 @@ export const getProjectAsync = createAsyncThunk(
       }
     }
   );
+  export const getProjectDetailsAsync = createAsyncThunk(
+    "project/get-project-address-list",
+    async (data:GetProjeDetails) => {  
+        const { accessToken, id } = data
+       
+      try { 
 
+        const  getProjectDetails = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/addresses/${id}`, {
+            headers: {
+              Authorization: `Bearer ${accessToken}`,
+            },
+          })
+            .then((response) => response.json())
+
+           
+          if(getProjectDetails.length ===0) return []
+          console.log(getProjectDetails, 'projecc')
+      return getProjectDetails
+      } catch (error) {     
+      }
+    }
+  );
 
 
 
@@ -69,15 +95,16 @@ interface ProjectState {
    data:[] | any,
     loading: 'idle' | 'pending' | 'succeeded' | 'failed'
     openCreateModal:Boolean,
-    crud:Boolean
-
+    crud:Boolean,
+    projectDetails:[] | any
   }
   
   const initialState = {
     data:[],
     loading: 'idle',
     openCreateModal:false,
-    crud:false
+    crud:false,
+    projectDetails:[]
 
   } as ProjectState
 
@@ -117,8 +144,19 @@ export const project = createSlice({
          state.data = payload;
         })
         .addCase(getProjectAsync.rejected, (state, {payload})=>{
-        //  state.user = {}
+        state.loading='idle'
+     })
+        .addCase(getProjectDetailsAsync.pending, (state, {payload})=>{
+            state.loading = 'pending';  
         })
+        .addCase(getProjectDetailsAsync.fulfilled, (state, {payload})=>{
+            state.projectDetails =payload
+            state.loading = 'idle';  
+     })
+        .addCase(getProjectDetailsAsync.rejected, (state, {payload})=>{
+        state.loading = 'idle';  
+     })
+       
         
     
     },

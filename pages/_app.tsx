@@ -11,9 +11,9 @@ import ProtectedRoutes from '../components/ProtectedRoutes';
 function MyApp({ Component, pageProps, router }: AppProps) {
   return <> 
     <ReduxProvider store={store}>
-  <Header />
   <ProtectedRoutes router = {router}>
   <SSRProvider>
+  <Header />
     <Component {...pageProps} /> 
     </SSRProvider>
  

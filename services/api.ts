@@ -9,7 +9,7 @@ export const Api = createApi({
     getUsers: builder.query({
       query: (page=1) => `/users?page=${page}`, 
     }),
-
+    
 
   }),
 });
