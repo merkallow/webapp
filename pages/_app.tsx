@@ -1,3 +1,4 @@
+import SSRProvider from 'react-bootstrap/SSRProvider';
 import '../styles/globals.css'
 import "bootstrap/dist/css/bootstrap.css";
 import type { AppProps } from 'next/app'
@@ -6,12 +7,15 @@ import  store  from "../state";
 import Header from '../components/Header';
 import ProtectedRoutes from '../components/ProtectedRoutes';
 
+
 function MyApp({ Component, pageProps, router }: AppProps) {
   return <> 
     <ReduxProvider store={store}>
   <Header />
   <ProtectedRoutes router = {router}>
+  <SSRProvider>
     <Component {...pageProps} /> 
+    </SSRProvider>
  
   </ProtectedRoutes>
   </ReduxProvider>
