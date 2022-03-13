@@ -1,19 +1,37 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Web3 from 'web3';
+import axios from 'axios'
 import jwtDecode from 'jwt-decode';
 import { Auth } from "../../types";
 
 let web3: Web3 | undefined = undefined; // Will hold the web3 instance
-const LS_KEY = 'login-with-metamask:auth';
 
 
-
+type CreatePro ={
+    name:string,
+    accessToken:string
+}
 export const createProjectAsync = createAsyncThunk(
   "project/create",
-  async (publicAddress:string, { dispatch }) => {  
-    try {
+  async (data:CreatePro, { dispatch }) => { 
+      const {name, accessToken} = data 
+      
+      const  createProjects = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/projects`,
+      {name}, {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        }
+      }
+      )
+
+const dat = createProjects?.data
+     return dat
 
     
+    
+
+
+    try {
     return {};
     } catch (error) {     
     }
@@ -36,7 +54,7 @@ export const getProjectAsync = createAsyncThunk(
           })
             .then((response) => response.json())
 
-            console.log('get projects', getProjects)
+           
           if(getProjects.length ===0) return []
       return getProjects
       } catch (error) {     
@@ -50,11 +68,16 @@ export const getProjectAsync = createAsyncThunk(
 interface ProjectState {
    data:[] | any,
     loading: 'idle' | 'pending' | 'succeeded' | 'failed'
+    openCreateModal:Boolean,
+    crud:Boolean
+
   }
   
   const initialState = {
     data:[],
     loading: 'idle',
+    openCreateModal:false,
+    crud:false
 
   } as ProjectState
 
@@ -62,18 +85,27 @@ export const project = createSlice({
     name: "project",
     initialState,
     reducers:{
+        openCreateModal:(state)=>{
+            state.openCreateModal = true
+        },
+        closeCreateModal:(state)=>{
+            state.openCreateModal = false
+        }
     },
    
     extraReducers: (builder) => {
       builder
         .addCase(createProjectAsync.pending, (state) => {
-          state.loading = 'pending';   
+          state.crud = true;   
         })
         .addCase(createProjectAsync.fulfilled, (state, {payload})=>{
-         // state.user = payload?.details;
-         // state.accessToken=payload?.accessToken
+            const copyState = state.data
+            state.data = [...copyState, payload]
+            state.openCreateModal= false
+            state.crud = false
         })
         .addCase(createProjectAsync.rejected, (state, {payload})=>{
+            state.crud = false
         //  state.user = {}
         })
         
@@ -91,6 +123,8 @@ export const project = createSlice({
     
     },
    });
+
+   export const {closeCreateModal, openCreateModal } = project.actions
 
   
 export default project.reducer;
